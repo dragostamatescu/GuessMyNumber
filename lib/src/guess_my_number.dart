@@ -19,10 +19,10 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   final TextEditingController controller = TextEditingController();
   String result = '';
   String buttonLabel = 'Guess';
@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Align(
             child: Text('Guess my number'),
-            alignment: Alignment.center,
           ),
         ),
         body: Column(
@@ -72,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                 elevation: 10,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Container(
                       padding: const EdgeInsets.all(15),
                       child: const Text(
@@ -87,8 +86,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: TextField(
                         controller: controller,
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: false),
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           suffix: IconButton(
                             iconSize: 23,
@@ -109,51 +107,49 @@ class _HomePageState extends State<HomePage> {
                               controller.clear();
                               buttonLabel = 'Guess';
                             });
-                          }
-                          else {
-                            int myNumber = int.parse(controller.text);
+                          } else {
+                            final int myNumber = int.parse(controller.text);
                             if (myNumber == randomNumber) {
                               showDialog<String>(
                                 context: context,
-                                builder: (BuildContext context) =>
-                                    AlertDialog(
-                                      title: const Text('You guessed right'),
-                                      content: Text('It was $randomNumber'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Try again!'),
-                                          onPressed: () {
-                                            setState(
-                                                  () {
-                                                randomNumber =
-                                                    Random().nextInt(99) + 1;
-                                                result = '';
-                                                controller.clear();
-                                              },
-                                            );
-                                            Navigator.pop(context, 'Try again');
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('You guessed right'),
+                                  content: Text('It was $randomNumber'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('Try again!'),
+                                      onPressed: () {
+                                        setState(
+                                          () {
+                                            randomNumber =
+                                                Random().nextInt(99) + 1;
+                                            result = '';
+                                            controller.clear();
                                           },
-                                        ),
-                                        TextButton(
-                                          child: const Text('OK'),
-                                          onPressed: () {
-                                            setState(() {
-                                              buttonLabel = 'Reset';
-                                              controller.clear();
-                                            });
-                                            Navigator.pop(context, 'OK');
-                                          },
-                                        ),
-                                      ],
+                                        );
+                                        Navigator.pop(context, 'Try again');
+                                      },
                                     ),
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        setState(() {
+                                          buttonLabel = 'Reset';
+                                          controller.clear();
+                                        });
+                                        Navigator.pop(context, 'OK');
+                                      },
+                                    ),
+                                  ],
+                                ),
                               );
                               FocusManager.instance.primaryFocus?.unfocus();
                             } else if (myNumber < randomNumber) {
                               setState(() =>
-                              result = 'You tried $myNumber.\nTry higher!');
+                                  result = 'You tried $myNumber.\nTry higher!');
                             } else if (myNumber > randomNumber) {
-                              setState(() =>
-                              result = 'You tried $myNumber.\nTry smaller!');
+                              setState(() => result =
+                                  'You tried $myNumber.\nTry smaller!');
                             }
                           }
                         },
